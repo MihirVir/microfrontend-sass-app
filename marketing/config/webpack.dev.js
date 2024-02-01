@@ -1,6 +1,8 @@
 // merge is a function used to merge two webpack config objects
 const {merge} = require("webpack-merge")
 
+/* production config */
+
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const commonConfig = require("./webpack.common");
 const packageJson = require("../package.json");
