@@ -1,1 +1,2 @@
+// dynamic import
 import("./bootstrap");
