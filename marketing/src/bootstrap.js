@@ -8,9 +8,21 @@ const mount = (el, { onNavigate }) => {
 
   // whenever the path changes automatically call the onNavigate
   // function.
-  history.listen(onNavigate);
+  if (onNavigate) {
+    history.listen(onNavigate);
+  }
 
   ReactDOM.render(<App history={history} />, el);
+
+  return {
+    onParentNavigate({ pathname: nextPathname }) {
+      const { pathname } = history.location;
+
+      if (pathname !== nextPathname) {
+        history.push(nextPathname);
+      }
+    },
+  };
 };
 
 // If we are in dev and isolation mount immediately
@@ -18,7 +30,7 @@ if (process.env.NODE_ENV === "development") {
   const devRoot = document.querySelector("#marketing-dev-root");
 
   if (devRoot) {
-    mount(devRoot);
+    mount(devRoot, {});
   }
 }
 

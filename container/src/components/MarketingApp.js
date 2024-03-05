@@ -4,10 +4,12 @@ import { useHistory } from "react-router-dom";
 
 export default () => {
   const ref = useRef(null);
+  // browser history object
   const history = useHistory();
+
   useEffect(() => {
     // passing refereces of html element
-    mount(ref.current, {
+    const { onParentNavigate } = mount(ref.current, {
       onNavigate: ({ pathname: nextPathname }) => {
         // listen function that is eventually calling onNavigate is going to give us an argument
         // which refer to as location. This is an objectthat has some information about where we are about
@@ -19,6 +21,8 @@ export default () => {
         }
       },
     });
+
+    history.listen(onParentNavigate);
   }, []);
 
   return <div ref={ref} />;
