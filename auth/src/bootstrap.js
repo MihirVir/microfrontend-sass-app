@@ -1,19 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { createMemoryHistory, createBrowserHistory } from "history";
 import App from "./App";
+import { createMemoryHistory, createBrowserHistory } from "history";
 
-const mount = (el, { onNavigate, defaultHistory }) => {
-  const history = defaultHistory || createMemoryHistory();
+const mount = (el, { onNavigate, defaultHistory, initPath }) => {
+  const history =
+    defaultHistory ||
+    createMemoryHistory({
+      initialEntries: [initPath],
+    });
 
   if (onNavigate) {
     history.listen(onNavigate);
   }
 
-  ReactDOM.render(<App history={history} />, document.querySelector(el));
+  ReactDOM.render(<App history={history} />, el);
 
   return {
-    onParentNavigate: ({ pathname: nextPathname }) => {
+    onParentNavigate({ pathname: nextPathname }) {
       const { pathname } = history.location;
 
       if (pathname !== nextPathname) {
@@ -23,13 +27,16 @@ const mount = (el, { onNavigate, defaultHistory }) => {
   };
 };
 
+// If we are in dev and isolation mount immediately
 if (process.env.NODE_ENV === "development") {
-  const devRoot = document.getElementById("#auth-dev-root");
+  const devRoot = document.querySelector("#auth-dev-root");
 
   if (devRoot) {
     mount(devRoot, { defaultHistory: createBrowserHistory() });
   }
 }
 
-// for container to call this mount
+// if we are running through a container
+// and we should export the mount function
+
 export { mount };
